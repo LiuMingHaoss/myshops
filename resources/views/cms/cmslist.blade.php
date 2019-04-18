@@ -12,7 +12,7 @@
 <body>
 <form action="/cms/cmslist" >
     <input type="text" name="goods_name">
-    <button>搜索</button>
+    <button>搜</button>
 </form>
 <br>
 <table border="1">
