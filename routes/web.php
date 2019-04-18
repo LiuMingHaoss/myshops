@@ -81,3 +81,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 //测试
 Route::get('/ceshi','CeshiController@ceshi');
 Route::any('/ceshi/ceshido','CeshiController@ceshido');
+
+
+//微信
+Route::get('/order/paygo_wx/{order_no}','OrderController@paygo_wx');
+Route::post('/weixin/pay/notify','OrderController@notify');

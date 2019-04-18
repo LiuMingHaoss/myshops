@@ -51,7 +51,11 @@
      <table>
       <tr>
        <td width="50%"><a href="/index/index" class="jiesuan" style="background:#5ea626;">继续购物</a></td>
+          @if($pay->pay_type == 1)
        <td width="50%"><a href="/order/paygo/{{$pay->order_no}}" class="jiesuan">立即支付</a></td>
+              @elseif($pay->pay_type == 2)
+              <td width="50%"><a href="/order/paygo_wx/{{$pay->order_no}}" class="jiesuan">立即支付</a></td>
+              @endif
       </tr>
      </table>
     </div><!--gwcpiao/-->

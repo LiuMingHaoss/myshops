@@ -1,34 +1,126 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-<table border="1">
-    <tr>
-        <td>商品id</td>
-        <td>{{$goodsInfo->goods_id}}</td>
-    </tr>
-    <tr>
-        <td>商品名称</td>
-        <td>{{$goodsInfo->goods_name}}</td>
-    </tr>
-    <tr>
-        <td>商品图片</td>
-        <td><img src="http://goods.img.com/{{$goodsInfo->goods_img}}" alt="" width="40" height="40"></td>
-    </tr>
-    <tr>
-        <td>商品数量</td>
-        <td>{{$goodsInfo->goods_num}}</td>
-    </tr>
-    <tr>
-        <td>商品描述</td>
-        <td>{{$goodsInfo->goods_desc}}</td>
-    </tr>
-</table>
-</body>
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="Author" contect="http://www.webqin.net">
+      <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>三级分销</title>
+    <link rel="shortcut icon" href="../../images/favicon.ico" />
+    
+    <!-- Bootstrap -->
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/style.css" rel="stylesheet">
+    <link href="../../css/response.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+      <script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="maincont">
+     <header>
+      <a href="javascript:history.back(-1)" class="back-off fl"><span class="glyphicon glyphicon-menu-left"></span></a>
+      <div class="head-mid">
+       <h1>产品详情</h1>
+      </div>
+     </header>
+     <div id="sliderA" class="slider">
+         @foreach($goodsimgs as $k=>$v)
+      <img src="http://goods.img.com/{{$v}}" />
+@endforeach
+     </div><!--sliderA/-->
+     <table class="jia-len">
+      <tr>
+       <th><strong class="orange">{{$goodsInfo->self_price}}</strong></th>
+       <td>
+        <input type="text" class="spinnerExample" goods_id="{{$goodsInfo->goods_id}}"/>
+       </td>
+      </tr>
+      <tr>
+       <td>
+        <strong>{{$goodsInfo->goods_name}}</strong>
+        <p class="hui">{{$goodsInfo->goods_desc}}</p>
+       </td>
+       <td align="right">
+        <a href="javascript:;" class="shoucang"><span class="glyphicon glyphicon-star-empty"></span></a>
+       </td>
+      </tr>
+     </table>
+
+     <div class="height2"></div>
+     <div class="zhaieq">
+      <a href="javascript:;" class="zhaiCur">商品简介</a>
+      <a href="javascript:;">商品参数</a>
+      <a href="javascript:;" style="background:none;">订购列表</a>
+      <div class="clearfix"></div>
+     </div><!--zhaieq/-->
+     <div class="proinfoList">
+      <img src="http://goods.img.com/{{$goodsInfo->goods_img}}" width="636" height="822" />
+     </div><!--proinfoList/-->
+     <div class="proinfoList">
+      暂无信息....
+     </div><!--proinfoList/-->
+     <div class="proinfoList">
+      暂无信息......
+     </div><!--proinfoList/-->
+     <table class="jrgwc">
+      <tr>
+       <th>
+        <a href="javascript:;" class="cartgo"><span class="glyphicon glyphicon-home"></span></a>
+       </th>
+       <td><a href="javascript:;" class="cartgo">加入购物车</a></td>
+      </tr>
+     </table>
+    </div><!--maincont-->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="../../js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/style.js"></script>
+    <!--焦点轮换-->
+    <script src="../../js/jquery.excoloSlider.js"></script>
+
+    <script src="/layui/layui.js"></script>
+    <script>
+		$(function () {
+		 $("#sliderA").excoloSlider();
+		});
+	</script>
+     <!--jq加减-->
+    <script src="../../js/jquery.spinner.js"></script>
+   <script>
+	$('.spinnerExample').spinner({});
+
+   </script>
+  </body>
 </html>
+<script>
+    $(function(){
+        layui.use('layer',function(){
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $(document).on('click','.cartgo',function(){
+                var buy=$('.spinnerExample').val();
+                var goods_id=$('.spinnerExample').attr('goods_id');
+                // console.log(goods_id);
+
+                $.post(
+                    '/cart/cartdo',
+                    {buy_number:buy,goods_id:goods_id},
+                    function(res){
+                        layer.msg(res.font);
+                    },'json'
+                )
+            })
+
+        })
+    })
+</script>

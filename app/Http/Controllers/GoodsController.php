@@ -3,62 +3,47 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 class GoodsController extends Controller
 {
-    //商品列表
-    public function goodslist(){
-        $seach=request()->input();
-        $where[]=['status',1];
-        if($seach['goods_name']??''){
-            $where[]=['goods_name','like',"%$seach[goods_name]%"];
-        }
-        if($seach['goods_desc']??''){
-            $where[]=['goods_desc','like',"%$seach[goods_desc]%"];
-        }
-        $data=DB::table('shop_goods')->where($where)->paginate(5);
-        return view('goods/goodslist',['data'=>$data,'seach'=>$seach]);
+    //全部商品
+    public function allshops(){
+        $goodsInfo=DB::table('shop_goods')->paginate(10);
+//        dd($goodsInfo);
+        return view('/goods/allshops',['goodsInfo'=>$goodsInfo]);
     }
     //商品详情
-    public function goodsdesc(Request $request,$goods_id){
+    public function goodsdesc($id){
+//        echo $id;
         $where=[
-          'goods_id'=>$goods_id
+            'goods_id'=>$id
         ];
-        $res=Cache::get('goodsInfo_'.$goods_id);
-        var_dump($res);
-        if(!$res){
-            $res=DB::table('shop_goods')->where($where)->first();
-            Cache::put('goodsInfo_'.$goods_id,$res);
-        }
-        return view('goods/goodsdesc',['goodsInfo'=>$res]);
+        $res=DB::table('shop_goods')->where($where)->first();
+        $goods_imgs=$res->goods_imgs;
+        $goods_imgs=explode('|',rtrim($goods_imgs,'|'));
+
+//        var_dump($goods_imgs);
+//        var_dump($res);
+        return view('goods/goodsdesc',['goodsInfo'=>$res,'goodsimgs'=>$goods_imgs]);
     }
-    //删除
-    public function goodsdel($goods_id){
-        $where=[
-          'goods_id'=>$goods_id
-        ];
-        $res=DB::table('shop_goods')->where($where)->update(['status'=>2]);
-        if($res){
-            Cache::forget('goodsInfo_'.$goods_id);
-            return redirect('/list');
+    //重新获取商品
+    public function newgoods(){
+        $type=request()->input('type');
+        if($type==1){
+            $where=[
+                'is_new'=>1
+            ];
+        }else if($type==2){
+            $where=[
+                'is_best'=>1
+            ];
+        }else if($type==3){
+            $where=[
+                'is_hot'=>1
+            ];
         }
-    }
-    //修改
-    public function goodsupdate($goods_id){
-        $res=DB::table('shop_goods')->where('goods_id',$goods_id)->first();
-        return view('goods/goodsupdate',['goodsInfo'=>$res]);
-    }
-    //修改执行
-    public function updatedo(){
-        $data=request()->input();
-        $where=[
-            'goods_id'=>$data['goods_id']
-        ];
-        $res=DB::table('shop_goods')->where($where)->update($data);
-        if($res){
-            Cache::put('goodsInfo_'.$data['goods_id'],$data);
-            return redirect('/list');
-        }
+        $res=DB::table('shop_goods')->where($where)->get();
+        echo view('goods/div',['goodsInfo'=>$res]);
     }
 }

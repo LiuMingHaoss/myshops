@@ -59,7 +59,7 @@
        <tr>
         <td colspan="2">
             <input type="radio" name="pay" class="pay" pay_type="1" checked>支付宝
-            <input type="radio" name="pay" class="pay" pay_type="2">余额
+            <input type="radio" name="pay" class="pay" pay_type="2">微信
             <input type="radio" name="pay" class="pay" pay_type="3">货到付款
         </td>
 
