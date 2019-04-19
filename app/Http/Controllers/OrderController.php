@@ -374,6 +374,10 @@ class OrderController extends Controller
             $sign = true;
             if($sign){       //签名验证成功
                 //TODO 逻辑处理  订单状态更新
+                $res=DB::table('shop_order')->where('order_no',$xml->out_trade_no)->update(['pay_status'=>2]);
+                if($res){
+                    return redirect('/pay_go_do');
+                }
             }else{
                 //TODO 验签失败
                 echo '验签失败，IP: '.$_SERVER['REMOTE_ADDR'];
@@ -382,5 +386,8 @@ class OrderController extends Controller
         }
         $response = '<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>';
         echo $response;
+    }
+    public function pay_go_do(){
+        echo '支付成功';
     }
 }

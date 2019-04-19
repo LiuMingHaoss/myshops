@@ -86,3 +86,4 @@ Route::any('/ceshi/ceshido','CeshiController@ceshido');
 //微信
 Route::get('/order/paygo_wx/{order_no}','OrderController@paygo_wx');
 Route::post('/weixin/pay/notify','OrderController@notify');
+Route::get('/pay_go_do','OrderController@pay_go_do');
